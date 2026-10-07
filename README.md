@@ -94,3 +94,4 @@ bench --site <site> execute biometric_sync.tasks.retry_unmatched_logs
 
 `0 → IN, 1 → OUT, 2 → OUT (break out), 3 → IN (break in), 4 → IN (OT in), 5 → OUT (OT out)`,
 and text values like `in`, `out`, `check in`, `check-out`. Override per device in *Punch State Mapping*.
+# biometric_sync
