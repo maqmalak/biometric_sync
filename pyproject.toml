@@ -1,0 +1,19 @@
+[project]
+name = "biometric_sync"
+authors = [{ name = "Biometric Sync", email = "admin@example.com" }]
+description = "Multi-device biometric attendance sync (ZKTeco TCP/UDP & ADMS push, ZKBio Time, HTTP API, Webhook) for ERPNext / HRMS"
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+dynamic = ["version"]
+dependencies = [
+    "pyzk>=0.9",
+    "requests",
+]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.bench.frappe-dependencies]
+frappe = ">=15.0.0,<17.0.0"

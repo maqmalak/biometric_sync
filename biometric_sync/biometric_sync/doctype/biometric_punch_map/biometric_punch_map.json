@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-07 17:59:45.777478",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "punch_state",
+  "log_type"
+ ],
+ "fields": [
+  {
+   "columns": 4,
+   "description": "Value sent by the device, e.g. 0, 1, 4, in, out",
+   "fieldname": "punch_state",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Device Punch State",
+   "reqd": 1
+  },
+  {
+   "columns": 4,
+   "fieldname": "log_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Check-in Log Type",
+   "options": "IN\nOUT\nBlank\nIgnore",
+   "reqd": 1
+  }
+ ],
+ "is_virtual": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-07 17:59:45.777478",
+ "modified_by": "Administrator",
+ "module": "Biometric Sync",
+ "name": "Biometric Punch Map",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

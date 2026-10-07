@@ -1,0 +1,184 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-10-07 17:59:45.777478",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_general",
+  "enable_scheduled_sync",
+  "duplicate_punch_window",
+  "cb_general",
+  "retry_unmatched",
+  "retry_days",
+  "sb_adms",
+  "enable_adms",
+  "adms_auto_register",
+  "cb_adms",
+  "adms_offline_after",
+  "adms_help",
+  "sb_cleanup",
+  "log_retention_days",
+  "cb_cleanup",
+  "sync_log_retention_days",
+  "sb_notify",
+  "notify_on_failure",
+  "cb_notify",
+  "notification_recipients"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_general",
+   "fieldtype": "Section Break",
+   "label": "Sync"
+  },
+  {
+   "default": "1",
+   "description": "Pull devices are synced automatically according to their own interval",
+   "fieldname": "enable_scheduled_sync",
+   "fieldtype": "Check",
+   "label": "Enable Scheduled Sync"
+  },
+  {
+   "default": "60",
+   "description": "A punch within this many seconds of an existing check-in of the same employee is marked Duplicate. 0 = only identical times",
+   "fieldname": "duplicate_punch_window",
+   "fieldtype": "Int",
+   "label": "Double Punch Window (Seconds)"
+  },
+  {
+   "fieldname": "cb_general",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "retry_unmatched",
+   "fieldtype": "Check",
+   "label": "Retry Unmatched / Failed Punches Hourly"
+  },
+  {
+   "default": "30",
+   "depends_on": "retry_unmatched",
+   "fieldname": "retry_days",
+   "fieldtype": "Int",
+   "label": "Retry Punches of the Last (Days)"
+  },
+  {
+   "fieldname": "sb_adms",
+   "fieldtype": "Section Break",
+   "label": "ADMS / Push"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_adms",
+   "fieldtype": "Check",
+   "label": "Enable ADMS (iclock) Endpoint"
+  },
+  {
+   "default": "0",
+   "description": "Create a Biometric Device automatically when an unknown serial number connects",
+   "fieldname": "adms_auto_register",
+   "fieldtype": "Check",
+   "label": "Auto-register Unknown ADMS Devices"
+  },
+  {
+   "fieldname": "cb_adms",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "10",
+   "fieldname": "adms_offline_after",
+   "fieldtype": "Int",
+   "label": "Mark Push Device Offline After (Minutes)"
+  },
+  {
+   "fieldname": "adms_help",
+   "fieldtype": "HTML",
+   "label": "Endpoints"
+  },
+  {
+   "fieldname": "sb_cleanup",
+   "fieldtype": "Section Break",
+   "label": "Retention"
+  },
+  {
+   "default": "0",
+   "description": "Synced / Duplicate / Ignored Biometric Logs older than this are deleted daily. 0 = keep forever",
+   "fieldname": "log_retention_days",
+   "fieldtype": "Int",
+   "label": "Delete Processed Raw Logs After (Days)"
+  },
+  {
+   "fieldname": "cb_cleanup",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "30",
+   "description": "0 = keep forever",
+   "fieldname": "sync_log_retention_days",
+   "fieldtype": "Int",
+   "label": "Delete Sync History After (Days)"
+  },
+  {
+   "fieldname": "sb_notify",
+   "fieldtype": "Section Break",
+   "label": "Notifications"
+  },
+  {
+   "default": "0",
+   "fieldname": "notify_on_failure",
+   "fieldtype": "Check",
+   "label": "E-mail When a Device Fails"
+  },
+  {
+   "fieldname": "cb_notify",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "notify_on_failure",
+   "description": "Comma or new-line separated e-mail addresses",
+   "fieldname": "notification_recipients",
+   "fieldtype": "Small Text",
+   "label": "Recipients"
+  }
+ ],
+ "is_virtual": 0,
+ "issingle": 1,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-10-07 17:59:45.777478",
+ "modified_by": "Administrator",
+ "module": "Biometric Sync",
+ "name": "Biometric Sync Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

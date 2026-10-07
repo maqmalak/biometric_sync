@@ -1,0 +1,216 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "BIO-SYNC-.YYYY.-.######",
+ "creation": "2026-10-07 17:59:45.777478",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "device",
+  "protocol",
+  "trigger",
+  "status",
+  "cb_time",
+  "start_time",
+  "end_time",
+  "duration",
+  "from_date",
+  "to_date",
+  "sb_counts",
+  "logs_fetched",
+  "new_logs",
+  "duplicates",
+  "out_of_range",
+  "cb_counts",
+  "checkins_created",
+  "double_punches",
+  "unmatched",
+  "ignored",
+  "failed",
+  "sb_message",
+  "message"
+ ],
+ "fields": [
+  {
+   "fieldname": "device",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Device",
+   "options": "Biometric Device",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "protocol",
+   "fieldtype": "Data",
+   "label": "Protocol",
+   "read_only": 1
+  },
+  {
+   "default": "Manual",
+   "fieldname": "trigger",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Trigger",
+   "options": "Scheduled\nManual"
+  },
+  {
+   "default": "In Progress",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "In Progress\nSuccess\nPartial\nFailed"
+  },
+  {
+   "fieldname": "cb_time",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Float",
+   "label": "Duration (Seconds)",
+   "precision": "1"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Datetime",
+   "label": "Requested From"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Datetime",
+   "label": "Requested To"
+  },
+  {
+   "fieldname": "sb_counts",
+   "fieldtype": "Section Break",
+   "label": "Counters"
+  },
+  {
+   "fieldname": "logs_fetched",
+   "fieldtype": "Int",
+   "label": "Fetched From Device"
+  },
+  {
+   "fieldname": "new_logs",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "New Raw Logs"
+  },
+  {
+   "fieldname": "duplicates",
+   "fieldtype": "Int",
+   "label": "Already Stored"
+  },
+  {
+   "fieldname": "out_of_range",
+   "fieldtype": "Int",
+   "label": "Outside Period"
+  },
+  {
+   "fieldname": "cb_counts",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "checkins_created",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Check-ins Created"
+  },
+  {
+   "fieldname": "double_punches",
+   "fieldtype": "Int",
+   "label": "Duplicate Punches"
+  },
+  {
+   "fieldname": "unmatched",
+   "fieldtype": "Int",
+   "label": "Employee Not Found"
+  },
+  {
+   "fieldname": "ignored",
+   "fieldtype": "Int",
+   "label": "Ignored"
+  },
+  {
+   "fieldname": "failed",
+   "fieldtype": "Int",
+   "label": "Failed"
+  },
+  {
+   "fieldname": "sb_message",
+   "fieldtype": "Section Break",
+   "label": "Messages"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Long Text",
+   "label": "Details"
+  }
+ ],
+ "in_create": 1,
+ "is_virtual": 0,
+ "issingle": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-10-07 17:59:45.777478",
+ "modified_by": "Administrator",
+ "module": "Biometric Sync",
+ "name": "Biometric Sync Log",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1
+  }
+ ],
+ "sort_field": "start_time",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "device",
+ "track_changes": 0
+}
