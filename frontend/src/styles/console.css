@@ -1,0 +1,6 @@
+/* Additions for the Frappe console (on top of the standalone tool's app.css). */
+.nav a .nav-count { margin-left: auto; }
+.status-pill { text-decoration: none; }
+.display-frame { width: 100%; height: calc(100vh - 190px); min-height: 520px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); }
+.settings-grid .btn.active { background: var(--primary-soft); color: var(--primary); }
+@media (max-width: 900px) { .settings-grid { grid-template-columns: 1fr !important; } .settings-grid > .card:first-child { position: static !important; } }

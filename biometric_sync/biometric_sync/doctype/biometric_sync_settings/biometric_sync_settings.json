@@ -24,7 +24,39 @@
   "sb_notify",
   "notify_on_failure",
   "cb_notify",
-  "notification_recipients"
+  "notification_recipients",
+  "sb_display",
+  "display_title",
+  "display_language",
+  "display_view",
+  "display_direction",
+  "display_day_start",
+  "cb_display1",
+  "display_show_photos",
+  "display_urdu_names",
+  "display_show_division",
+  "display_show_department",
+  "display_show_sub_department",
+  "display_show_designation",
+  "cb_display2",
+  "display_recent_count",
+  "display_refresh_seconds",
+  "sb_machine_defaults",
+  "default_import_from",
+  "default_sync_interval",
+  "default_log_type_mode",
+  "default_time_offset",
+  "cb_machine_defaults",
+  "default_port",
+  "default_comm_key",
+  "default_timeout",
+  "default_force_udp",
+  "default_ping_before_connect",
+  "default_disable_device_during_sync",
+  "default_sync_device_time",
+  "sb_console_security",
+  "console_password_enabled",
+  "console_password"
  ],
  "fields": [
   {
@@ -140,6 +172,198 @@
    "fieldname": "notification_recipients",
    "fieldtype": "Small Text",
    "label": "Recipients"
+  },
+  {
+   "fieldname": "sb_display",
+   "fieldtype": "Section Break",
+   "label": "Check-in Display",
+   "description": "Live board at /checkin-display (gate screen / wall TV)."
+  },
+  {
+   "fieldname": "display_title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "default": "Main Gate"
+  },
+  {
+   "fieldname": "display_language",
+   "fieldtype": "Select",
+   "label": "Language",
+   "options": "en\nur",
+   "default": "en"
+  },
+  {
+   "fieldname": "display_view",
+   "fieldtype": "Select",
+   "label": "Employees View",
+   "options": "cards\nlist",
+   "default": "cards"
+  },
+  {
+   "fieldname": "display_direction",
+   "fieldtype": "Select",
+   "label": "IN / OUT",
+   "options": "machine\nalternate",
+   "default": "alternate",
+   "description": "machine = the punch's Log Type; alternate = IN, OUT, IN\u2026 through the day (repeat scans within 3 minutes count once)"
+  },
+  {
+   "fieldname": "display_day_start",
+   "fieldtype": "Time",
+   "label": "Day Starts At",
+   "default": "07:00:00",
+   "description": "Punches before this time belong to the previous day (night shifts)."
+  },
+  {
+   "fieldname": "cb_display1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "display_show_photos",
+   "fieldtype": "Check",
+   "label": "Show Photos",
+   "default": "1"
+  },
+  {
+   "fieldname": "display_urdu_names",
+   "fieldtype": "Check",
+   "label": "Urdu Names in Urdu Mode",
+   "default": "1"
+  },
+  {
+   "fieldname": "display_show_division",
+   "fieldtype": "Check",
+   "label": "Show Division",
+   "default": "1"
+  },
+  {
+   "fieldname": "display_show_department",
+   "fieldtype": "Check",
+   "label": "Show Department",
+   "default": "1"
+  },
+  {
+   "fieldname": "display_show_sub_department",
+   "fieldtype": "Check",
+   "label": "Show Sub Department",
+   "default": "1"
+  },
+  {
+   "fieldname": "display_show_designation",
+   "fieldtype": "Check",
+   "label": "Show Designation",
+   "default": "1"
+  },
+  {
+   "fieldname": "cb_display2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "display_recent_count",
+   "fieldtype": "Int",
+   "label": "Activity Rows",
+   "default": "40"
+  },
+  {
+   "fieldname": "display_refresh_seconds",
+   "fieldtype": "Int",
+   "label": "Refresh Every (seconds)",
+   "default": "30"
+  },
+  {
+   "fieldname": "sb_machine_defaults",
+   "fieldtype": "Section Break",
+   "label": "Machine Defaults",
+   "description": "Used for new machines; Apply to all machines copies them to every machine."
+  },
+  {
+   "fieldname": "default_import_from",
+   "fieldtype": "Date",
+   "label": "Import Punches From",
+   "description": "Punches older than this date are ignored on every machine. Empty = no limit."
+  },
+  {
+   "fieldname": "default_sync_interval",
+   "fieldtype": "Int",
+   "label": "Sync Every (Minutes)",
+   "default": "15"
+  },
+  {
+   "fieldname": "default_log_type_mode",
+   "fieldtype": "Select",
+   "label": "Punch Direction",
+   "options": "Device Punch State\nAlways IN\nAlways OUT\nAlternate IN/OUT\nLeave Blank",
+   "default": "Device Punch State"
+  },
+  {
+   "fieldname": "default_time_offset",
+   "fieldtype": "Int",
+   "label": "Machine Clock Offset (Minutes)",
+   "default": "0"
+  },
+  {
+   "fieldname": "cb_machine_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_port",
+   "fieldtype": "Int",
+   "label": "Port",
+   "default": "4370"
+  },
+  {
+   "fieldname": "default_comm_key",
+   "fieldtype": "Int",
+   "label": "Communication Password (Comm Key)",
+   "default": "0"
+  },
+  {
+   "fieldname": "default_timeout",
+   "fieldtype": "Int",
+   "label": "Connection Timeout (Seconds)",
+   "default": "10"
+  },
+  {
+   "fieldname": "default_force_udp",
+   "fieldtype": "Check",
+   "label": "Use UDP Instead of TCP",
+   "default": "0"
+  },
+  {
+   "fieldname": "default_ping_before_connect",
+   "fieldtype": "Check",
+   "label": "Ping Before Connecting",
+   "default": "0"
+  },
+  {
+   "fieldname": "default_disable_device_during_sync",
+   "fieldtype": "Check",
+   "label": "Lock the Machine While Reading",
+   "default": "1"
+  },
+  {
+   "fieldname": "default_sync_device_time",
+   "fieldtype": "Check",
+   "label": "Set the Machine Clock on Every Sync",
+   "default": "0"
+  },
+  {
+   "fieldname": "sb_console_security",
+   "fieldtype": "Section Break",
+   "label": "Console Security"
+  },
+  {
+   "fieldname": "console_password_enabled",
+   "fieldtype": "Check",
+   "label": "Console Password Enabled",
+   "read_only": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "console_password",
+   "fieldtype": "Password",
+   "label": "Console Password",
+   "read_only": 1
   }
  ],
  "is_virtual": 0,
