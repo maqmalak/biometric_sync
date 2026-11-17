@@ -834,3 +834,64 @@ def lock():
 	_can_read(check_lock=False)
 	frappe.cache.delete_value(_unlock_key())
 	return {"ok": True}
+
+
+# ---------------------------------------------------------------- live capture service (Check-in Display page)
+@frappe.whitelist()
+def live_service():
+	"""Is the live capture service running, and what each live machine is doing."""
+	_can_read()
+	from biometric_sync.live import service_info, status
+
+	devs = frappe.get_all("Biometric Device", {"enabled": 1, "protocol": ZK_PULL}, ["name", "device_name", "live_capture"])
+	info = service_info()
+	return {
+		"running": bool(info), "pid": info and info.get("pid"), "host": info and info.get("host"),
+		"started": info and info.get("started"), "stopping": bool(frappe.cache.get_value("bs_live_stop", use_local_cache=False)),
+		"machines": [{"name": d.name, "label": d.device_name or d.name, "live_capture": cint(d.live_capture),
+			**({k: v for k, v in status(d.name).items() if k in ("status", "since", "error", "punches")} if cint(d.live_capture) else {"status": "off"})}
+			for d in devs],
+	}
+
+
+@frappe.whitelist(methods=["POST"])
+def live_service_start(enable_all=0):
+	"""Start the live capture service in the background (the same as
+	`bench --site <site> execute biometric_sync.live.run`). With `enable_all`, Live Capture is turned on for every
+	enabled ZKTeco machine first."""
+	import os
+	import subprocess
+	import sys
+
+	from frappe.utils import get_bench_path
+
+	from biometric_sync.live import STOP_KEY, service_info
+
+	_can_write()
+	if cint(enable_all):
+		for name in frappe.get_all("Biometric Device", {"enabled": 1, "protocol": ZK_PULL, "live_capture": 0}, pluck="name"):
+			frappe.db.set_value("Biometric Device", name, "live_capture", 1)
+		frappe.db.commit()
+	if not frappe.db.exists("Biometric Device", {"enabled": 1, "protocol": ZK_PULL, "live_capture": 1}):
+		frappe.throw(_("No machine has Live Capture on. Turn it on for a machine first."), title=_("Nothing to capture"))
+	if service_info():
+		return live_service()
+	frappe.cache.delete_value(STOP_KEY)
+	bench = get_bench_path()
+	log = open(os.path.join(bench, "logs", f"biometric-live-{frappe.local.site}.log"), "a")
+	subprocess.Popen([sys.executable, "-m", "frappe.utils.bench_helper", "frappe", "--site", frappe.local.site,
+		"execute", "biometric_sync.live.run"], cwd=os.path.join(bench, "sites"), stdin=subprocess.DEVNULL,
+		stdout=log, stderr=subprocess.STDOUT, start_new_session=True, close_fds=True)
+	log.close()
+	return {**live_service(), "starting": True}
+
+
+@frappe.whitelist(methods=["POST"])
+def live_service_stop():
+	"""Ask the running service to stop (it lets go of the machines within a few seconds; the 15-minute pulls carry on)."""
+	from biometric_sync.live import STOP_KEY, service_info
+
+	_can_write()
+	if service_info():
+		frappe.cache.set_value(STOP_KEY, 1, expires_in_sec=300)
+	return {**live_service(), "stopping": True}

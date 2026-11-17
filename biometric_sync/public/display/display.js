@@ -118,6 +118,8 @@ Pages.display = {
       : `<span class="dx-sync wait">${icon('clock', '')}${T().waiting}</span>`;
     const hm = (ts) => ts ? `<bdi>${esc(ts.slice(11, 16))}</bdi>` : '—';
     const org = (p) => [V(p, 'division'), V(p, p.sub_department ? 'sub_department' : 'department')].filter(Boolean).join(' · ');
+    // employee ID with designation, e.g. "HR-EMP-00239 · Kier Loader"
+    const idDesig = (p) => [`<bdi>${esc(p.employee_id || `${T().id} ${p.user_id}`)}</bdi>`, V(p, 'designation')].filter(Boolean).join(' · ');
 
     // Urdu web font for the Urdu labels and the language button (falls back to system fonts when offline)
     const loadUrduFont = () => {
@@ -273,7 +275,7 @@ Pages.display = {
       if (peopleView === 'list') {
         box.innerHTML = `<table class="dx-list"><thead><tr><th>${t.employee}</th><th>${t.division} · ${t.department}</th><th>${t.firstIn}</th><th>${t.lastOut}</th><th>${t.worked}</th><th>${t.status}</th></tr></thead><tbody>
           ${list.map((p) => `<tr class="${p.status}">
-            <td><div class="dx-list-who">${avatar(p, 'sm')}<div><div class="n">${whoH(p)}</div><div class="m">${V(p, 'designation') || `${t.id} ${esc(p.user_id)}`}</div></div></div></td>
+            <td><div class="dx-list-who">${avatar(p, 'sm')}<div><div class="n">${whoH(p)}</div><div class="m">${idDesig(p)}</div></div></div></td>
             <td class="o">${org(p) || '—'}</td>
             <td class="t">${hm(p.first_in)}</td>
             <td class="t">${hm(p.last_out)}</td>
@@ -288,7 +290,7 @@ Pages.display = {
             ${avatar(p)}
             <div class="dx-person-id">
               <div class="n" title="${esc(who(p))}">${whoH(p)}</div>
-              <div class="m">${V(p, 'designation') || `${t.id} ${esc(p.user_id)}`}</div>
+              <div class="m">${idDesig(p)}</div>
               ${org(p) ? `<div class="o">${org(p)}</div>` : ''}
             </div>
             <span class="dx-state ${p.status}"><i></i>${p.status === 'in' ? t.in : t.out}</span>

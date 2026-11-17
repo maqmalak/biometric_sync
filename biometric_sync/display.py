@@ -151,11 +151,17 @@ def today(date: str | None = None, device: str | None = None, limit: int = 40):
 	present_active = 0
 	for person in people.values():
 		person["status"] = "in" if person["last_type"] == "IN" else "out"
-		worked, open_ts = person.pop("_worked", None), person.pop("_open", None)
+		# Worked = first in → last out (breaks included); still inside today → first in → now, counting up
+		person.pop("_worked", None), person.pop("_open", None)
+		first_in = datetime.strptime(person["first_in"], TS) if person["first_in"] else None
+		last_out = datetime.strptime(person["last_out"], TS) if person["last_out"] else None
 		person["worked_running"] = False
-		if open_ts and is_today:
-			worked = (worked or 0) + max(0, int((now - open_ts).total_seconds()))
+		worked = None
+		if first_in and person["status"] == "in" and is_today:
+			worked = max(0, int((now - first_in).total_seconds()))
 			person["worked_running"] = True
+		elif first_in and last_out and last_out > first_in:
+			worked = int((last_out - first_in).total_seconds())
 		person["worked_seconds"] = worked
 		present_active += 1 if person.pop("_active") else 0
 		for k in ("_last_dt", "_turns"):
