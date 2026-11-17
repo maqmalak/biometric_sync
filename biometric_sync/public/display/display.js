@@ -319,8 +319,14 @@ Pages.display = {
       const chip = (tone, ic, text, title = '') => `<span class="dx-st ${tone}" ${title ? `title="${esc(title)}"` : ''}>${icon(ic, '')}<span>${esc(text)}</span></span>`;
       const hhmm = (ts) => (ts ? String(ts).replace('T', ' ').slice(11, 16) : '');
       const parts = [chip(store.connected ? 'ok' : 'bad', store.connected ? 'cloud' : 'cloudOff', store.connected ? t.erpOk : t.svcOffline)];
+      const lv = data.live || {};
+      if (lv.enabled && (lv.machines || []).length) {
+        const n = lv.machines.length;
+        parts.push(chip(lv.listening === n ? 'ok' : lv.listening ? 'warn' : 'bad', 'fingerprint', t.liveCap(lv.listening, n),
+          lv.machines.map((m) => `${m.name}: ${m.status}${m.last_error ? ' — ' + m.last_error : ''}`).join('\n')));
+      }
       const devs = sv.devices || [];
-      if (devs.length) {
+      if (devs.length && !(lv.enabled && (lv.machines || []).length)) {
         const ok = devs.filter((d) => !d.last_error && String(d.status || '').toLowerCase() !== 'offline').length;
         parts.push(chip(ok === devs.length ? 'ok' : ok ? 'warn' : 'bad', 'fingerprint', t.liveN(ok, devs.length),
           devs.map((d) => `${d.name}: ${d.status || ''}${d.last_sync_at ? ' · ' + d.last_sync_at.slice(0, 16) : ''}${d.last_error ? ' — ' + d.last_error : ''}`).join('\n')));

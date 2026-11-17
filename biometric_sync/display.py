@@ -43,6 +43,8 @@ def settings():
 	out["display_day_start"] = str(out["display_day_start"] or "00:00")[:5]
 	out["display_recent_count"] = cint(out["display_recent_count"]) or 40
 	out["display_refresh_seconds"] = max(5, cint(out["display_refresh_seconds"]) or 30)
+	if frappe.db.exists("Biometric Device", {"enabled": 1, "live_capture": 1}):
+		out["display_refresh_seconds"] = 5   # live capture: show each punch within seconds
 	return out
 
 
@@ -178,7 +180,7 @@ def today(date: str | None = None, device: str | None = None, limit: int = 40):
 		"recent": list(reversed(recent[-limit:])),
 		"people": plist,
 		"last_read_at": _last_read(),
-		"live": {"enabled": False, "machines": []},
+		"live": _live(),
 		"service": _service(),
 	}
 
@@ -199,6 +201,18 @@ def _previous(before, device):
 		"type_guessed": False, "sync_status": "synced", "device_name": r.device_id, "employee_id": r.employee,
 		"employee_name": r.employee_name, "employee_name_ur": r.mm_urdu_name, "designation": r.designation,
 		"photo": r.image or None}
+
+
+def _live():
+	"""Live capture status for the display's header and status bar (the standalone tool's shape)."""
+	from biometric_sync.live import status
+
+	devs = frappe.get_all("Biometric Device", {"enabled": 1, "live_capture": 1}, ["name", "device_name"])
+	machines = []
+	for d in devs:
+		st = status(d.name)
+		machines.append({"name": d.device_name or d.name, "status": st.get("status"), "last_error": st.get("error")})
+	return {"enabled": bool(devs), "machines": machines, "listening": sum(1 for m in machines if m["status"] == "listening")}
 
 
 def _last_read():

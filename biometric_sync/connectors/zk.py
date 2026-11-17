@@ -20,6 +20,11 @@ class ZKConnector(BaseConnector):
 		device = self.device
 		if not device.ip_address:
 			raise DeviceConnectionError("IP Address is required")
+		if cint(device.get("live_capture")):   # the live capture service holds the machine: ask it to let go first
+			from biometric_sync import live
+
+			live.pause(device.name)
+			self._paused_live = True
 
 		zk = ZK(
 			device.ip_address.strip(),
@@ -32,6 +37,7 @@ class ZKConnector(BaseConnector):
 		try:
 			self.conn = zk.connect()
 		except Exception as e:
+			self._resume_live()   # no disconnect() follows a failed connect
 			raise DeviceConnectionError(f"Could not connect to {device.ip_address}:{device.port} - {e}")
 
 		if cint(device.disable_device_during_sync):
@@ -41,17 +47,27 @@ class ZKConnector(BaseConnector):
 			except Exception:
 				pass
 
+	def _resume_live(self):
+		if getattr(self, "_paused_live", False):
+			from biometric_sync import live
+
+			live.resume(self.device.name)
+			self._paused_live = False
+
 	def disconnect(self):
-		if not self.conn:
-			return
 		try:
-			if self._disabled:
-				self.conn.enable_device()
-		finally:
+			if not self.conn:
+				return
 			try:
-				self.conn.disconnect()
+				if self._disabled:
+					self.conn.enable_device()
 			finally:
-				self.conn = None
+				try:
+					self.conn.disconnect()
+				finally:
+					self.conn = None
+		finally:
+			self._resume_live()   # the live capture service may reconnect now
 
 	def get_info(self):
 		info = {}

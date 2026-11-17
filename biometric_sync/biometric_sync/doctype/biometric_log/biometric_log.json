@@ -110,7 +110,7 @@
    "fieldname": "source",
    "fieldtype": "Select",
    "label": "Source",
-   "options": "Pull\nADMS Push\nWebhook\nFile Import\nManual",
+   "options": "Pull\nADMS Push\nWebhook\nFile Import\nManual\nLive Capture",
    "read_only": 1
   },
   {

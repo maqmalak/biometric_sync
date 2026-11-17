@@ -109,12 +109,22 @@ def _device_stats():
 	return {r.device: r for r in rows}
 
 
+def _live_status(d):
+	if not cint(d.get("live_capture")):
+		return {"status": "off"}
+	from biometric_sync.live import status
+
+	st = status(d.name)
+	return st if st.get("status") != "off" else {"status": "not running"}   # flag on, but no service is holding the machine
+
+
 def _public_device(d, stats=None):
 	st = (stats or {}).get(d.name) or {}
 	return {
 		"id": d.name, "name": d.device_name or d.name, "device_id": d.checkin_device_id or d.name,
 		"protocol": d.protocol, "ip": d.ip_address, "port": d.port, "timeout": d.timeout, "force_udp": bool(cint(d.force_udp)),
 		"enabled": bool(cint(d.enabled)), "auto_sync": bool(cint(d.auto_sync)), "sync_interval": cint(d.sync_interval) or 15,
+		"live_capture": bool(cint(d.get("live_capture"))), "live": _live_status(d),
 		"status": (d.status or "Unknown").lower(), "last_success_at": _ts(d.last_sync_at), "last_sync_status": d.last_sync_status,
 		"last_error": d.last_error, "last_punch_time": _ts(d.last_punch_time), "company": d.company,
 		"log_type_mode": d.log_type_mode, "sync_from": _ts(d.sync_from), "time_offset_minutes": cint(d.time_offset_minutes),
@@ -155,7 +165,7 @@ def device_save(data, name=None):
 		if not data.get("sync_from"):
 			doc.sync_from = f"{st.default_import_from} 00:00:00" if st.default_import_from else now_datetime()
 	fields = {"protocol": "protocol", "device_id": "checkin_device_id", "ip": "ip_address", "port": "port", "timeout": "timeout",
-		"force_udp": "force_udp", "enabled": "enabled", "auto_sync": "auto_sync", "sync_interval": "sync_interval",
+		"force_udp": "force_udp", "enabled": "enabled", "auto_sync": "auto_sync", "sync_interval": "sync_interval", "live_capture": "live_capture",
 		"log_type_mode": "log_type_mode", "sync_from": "sync_from", "time_offset_minutes": "time_offset_minutes",
 		"clear_after_sync": "clear_device_logs_after_sync", "sync_device_time": "sync_device_time", "latitude": "latitude",
 		"longitude": "longitude", "company": "company", "skip_auto_attendance": "skip_auto_attendance"}

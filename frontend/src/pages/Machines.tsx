@@ -58,6 +58,7 @@ function DeviceCard({ d, canWrite, onTest, onUsers, onMore }: { d: Device; canWr
         <div className="server-title">
           <div className="name">{d.name} {!d.enabled && <span className="badge outline">Disabled</span>} <StatusBadge status={d.status} />
             {d.auto_sync ? <span className="badge info" title="Read automatically"><Icon name="calendar" /> every {d.sync_interval} min</span> : <span className="badge outline">Auto sync off</span>}
+            {d.live_capture && <LiveBadge live={d.live} />}
             {d.clear_after_sync && <span className="badge warning" title="The machine log is cleared after every sync"><Icon name="trash" /> Clears after sync</span>}
           </div>
           <div className="meta">
@@ -90,6 +91,14 @@ function DeviceCard({ d, canWrite, onTest, onUsers, onMore }: { d: Device; canWr
       </div>
     </div>
   );
+}
+
+function LiveBadge({ live }: { live: Device["live"] }) {
+  const st = live?.status || "off";
+  const tone = st === "listening" ? "success" : st === "paused" ? "warning" : "danger";
+  const label = st === "listening" ? `Live${live.punches ? ` · ${live.punches} today` : ""}` : st === "paused" ? "Live paused (reading)" : st === "not running" ? "Live: service not running" : `Live: ${st}`;
+  return <span className={`badge ${tone}`} title={live?.error || (st === "not running" ? "Start the live capture service (bench --site <site> execute biometric_sync.live.run, or supervisor in production)." : "Punches arrive within seconds")}>
+    <Icon name={st === "listening" ? "activity" : "wifiOff"} /> {label}</span>;
 }
 
 function TestResult({ d, i, onClose }: { d: Device; i: any; onClose: () => void }) {
@@ -191,7 +200,7 @@ export function DeviceEditor({ device, prefill = {}, onClose }: { device: Device
       enabled: !!f.enabled, auto_sync: !!f.auto_sync, sync_interval: num(f.sync_interval) || 15, log_type_mode: f.log_type_mode,
       sync_from: f.sync_from ? `${f.sync_from} 00:00:00` : null, time_offset_minutes: num(f.time_offset_minutes) || 0,
       clear_after_sync: !!f.clear_after_sync, sync_device_time: !!f.sync_device_time, latitude: num(f.latitude), longitude: num(f.longitude),
-      skip_auto_attendance: !!f.skip_auto_attendance, password: f.password || null,
+      skip_auto_attendance: !!f.skip_auto_attendance, password: f.password || null, live_capture: !!f.live_capture,
     };
     try {
       const saved = await post<Device>("device_save", { data, name: isNew ? null : device!.id });
@@ -234,6 +243,8 @@ export function DeviceEditor({ device, prefill = {}, onClose }: { device: Device
           <div className="form-grid">
             <div className="field"><label>&nbsp;</label><Switch checked={f.auto_sync} onChange={(v) => set("auto_sync", v)} label="Read automatically" sub="Needs the site's scheduler" /></div>
             <div className="field"><label>Every (minutes)</label><input className="input" type="number" min={1} max={1440} value={f.sync_interval ?? 15} onChange={(e) => set("sync_interval", e.target.value)} /></div>
+            {zk && <div className="field" style={{ gridColumn: "1 / -1" }}><Switch checked={!!f.live_capture} onChange={(v) => set("live_capture", v)} label="Live capture (real time)"
+              sub="Each punch is stored and shown on the Check-in Display within seconds. Keep “Read automatically” on as a safety net." /></div>}
             <div className="field"><label>Import punches from</label><input className="input" type="date" value={f.sync_from || ""} onChange={(e) => set("sync_from", e.target.value)} /><div className="hint">Older punches on the machine are ignored. New machines start from now.</div></div>
             <div className="field"><label>Machine clock offset (minutes)</label><input className="input" type="number" value={f.time_offset_minutes ?? 0} onChange={(e) => set("time_offset_minutes", e.target.value)} /><div className="hint">When the machine runs in another time zone.</div></div>
           </div></div>

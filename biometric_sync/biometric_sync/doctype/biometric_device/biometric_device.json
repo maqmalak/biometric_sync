@@ -81,6 +81,7 @@
   "punch_map",
   "sb_sync",
   "auto_sync",
+  "live_capture",
   "sync_interval",
   "sync_from",
   "cb_sync",
@@ -573,6 +574,14 @@
    "fieldname": "auto_sync",
    "fieldtype": "Check",
    "label": "Auto Sync"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.protocol=='ZKTeco (TCP/UDP)'",
+   "description": "Keep a connection open and store each punch the moment it is scanned (the live capture service, biometric_sync.live.run, must be running). Auto Sync stays on as a safety net for anything missed while the machine was offline.",
+   "fieldname": "live_capture",
+   "fieldtype": "Check",
+   "label": "Live Capture"
   },
   {
    "default": "15",
